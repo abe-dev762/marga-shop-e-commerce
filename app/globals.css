@@ -16,7 +16,8 @@
   --color-lightOrange: #fca99b;
   --color-shop_light_green: #3b9c3c;
   --color-deal-bg: #f1f3f8;
-  --color-signature: #3abd86;
+  --color-shop-light-green: #3b933c;
+  --color-signature: #0A5;
 }
 
 @theme inline {
