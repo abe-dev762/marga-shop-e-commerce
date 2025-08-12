@@ -18,6 +18,7 @@
   --color-deal-bg: #f1f3f8;
   --color-shop-light-green: #3b933c;
   --color-signature: #0A5;
+  --color-navy: #1d3eb5;
 }
 
 @theme inline {
@@ -133,5 +134,11 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .hoverEffect {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  button {
+    @apply hover:cursor-pointer;
   }
 }
