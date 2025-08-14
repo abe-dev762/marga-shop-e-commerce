@@ -6,9 +6,15 @@ import SearchBar from './SearchBar';
 import CartIcon from './CartIcon';
 import FavoriteIcon from './FavoriteIcon';
 import MobileMenu from './MobileMenu';
+import { ClerkLoaded, SignedIn, UserButton } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
+import SignIn from './SignIn';
 
 
-const header = () => {
+
+const header = async () => {
+  const user = await currentUser();
+  
   return (
     <header className='bg-white/70 py-5 z-50 sticky backdrop-blur-md'>
       <Container className='flex items-center justify-between text-lightColor'>
@@ -21,6 +27,11 @@ const header = () => {
           <SearchBar/>
           <CartIcon/>
           <FavoriteIcon/>
+          <ClerkLoaded>
+            <SignedIn>
+              <UserButton/>
+            </SignedIn>
+          </ClerkLoaded>
         </div>
       </Container>
     </header>
