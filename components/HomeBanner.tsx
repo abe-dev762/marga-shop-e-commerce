@@ -1,13 +1,18 @@
 import React from 'react';
 import Title from './Title';
 import Link from 'next/link';
-import banner_2 from '@/images/banner/banner_2.png';
+import { banner_1 } from '@/images';
 import Image from 'next/image';
 
 
+
 const HomeBanner = () => {
-  return (
-    <div className='py-16 md:py-0 bg-signature/80 rounded-lg px-10 md:px-24 flex items-center justify-between'>
+    //test
+    console.log("HomeBanner mounted")
+  
+
+    return (
+    <div className='py-16 md:py-0 rounded-lg px-10 md:px-24 flex items-center justify-between'>
         <div>
             <Title>
                 Upto 60% off on <br/>
@@ -20,11 +25,8 @@ const HomeBanner = () => {
             </Link>
         </div>
         <div>
-            <Image 
-            src={banner_2}
-            alt='banner_2'
-            className='hidden md:inline-flex w-96'
-            />
+            <Image src={banner_1} alt="banner" width={384} height={256} className="hidden md:inline-flex w-96" />
+
         </div>
     </div>
   )

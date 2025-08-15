@@ -1,33 +1,22 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { ClerkProvider } from '@clerk/nextjs'
+import { Toaster } from "react-hot-toast";
 
-
-export const metadata: Metadata = {
-  title: "Marga Shop",
-  description: "The best choice for shopping",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ClerkProvider>
-      <html lang="en">
-      <body className={`font-main antialiased`}>
-        <div className="flex flex-col">
-          <Header/>
-          <main className="flex">
-            {children}
-          </main>
-          <Footer/>
-        </div>
+    <html lang="en">
+      <body className="font-main antialiased">
+        {children}
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "#000000",
+              color: "#fff",
+            },
+          }}
+        />
       </body>
     </html>
-    </ClerkProvider>
   );
-}
+};
+export default RootLayout;

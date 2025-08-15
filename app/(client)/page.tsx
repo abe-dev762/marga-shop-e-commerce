@@ -1,11 +1,12 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/Container';
 import HomeBanner from '@/components/HomeBanner';
 
 const Home = () => {
   return (
-    <Container className='bg-signature/80'>
+    <Container>
       <HomeBanner/>
     </Container>
   )

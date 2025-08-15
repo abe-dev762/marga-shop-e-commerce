@@ -49,7 +49,9 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
             </Link>
           ))}
         </div>
-        <SocialMedia />
+        <SocialMedia 
+        tooltipClassName='bg-darkColor/60 text-white'
+        iconClassName='hover:border-navy hover:scale-105 transition-all'/>
       </div>
     </div>
   );
