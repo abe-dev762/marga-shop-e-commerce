@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import Container from './Container';
 import Logo from './Logo';
@@ -7,13 +8,13 @@ import CartIcon from './CartIcon';
 import FavoriteIcon from './FavoriteIcon';
 import MobileMenu from './MobileMenu';
 import { ClerkLoaded, SignedIn, UserButton } from '@clerk/nextjs';
-import { currentUser } from '@clerk/nextjs/server';
+import { useUser } from '@clerk/nextjs';
 import SignIn from './SignIn';
 
 
 
-const header = async () => {
-  const user = await currentUser();
+const Header = () => {
+  const { isSignedIn } = useUser();
   
   return (
     <header className='bg-white/70 py-5 z-50 sticky backdrop-blur-md'>
@@ -31,12 +32,12 @@ const header = async () => {
             <SignedIn>
               <UserButton/>
             </SignedIn>
-            {!user && <SignIn/>}
+            {!isSignedIn && <SignIn/>}
           </ClerkLoaded>
         </div>
       </Container>
     </header>
   )
-}
+};
 
-export default header
+export default Header;
