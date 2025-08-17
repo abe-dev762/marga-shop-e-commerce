@@ -34,4 +34,4 @@ const HomeTabBar = ({selectedTab, onTabSelect}: HomeTabBarProps) => {
   )
 }
 
-export default HomeTabBar
+export default HomeTabBar;
