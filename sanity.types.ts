@@ -21,7 +21,7 @@ export type Blog = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
+  title: string;
   slug?: Slug;
   author?: {
     _ref: string;
@@ -82,6 +82,16 @@ export type Blog = {
     _key: string;
   }>;
 };
+
+export type PopulatedBlogCategory = {
+  title?: string;
+  slug?: Slug;
+};
+
+export type PopulatedBlog = Omit<Blog, "blogcategories"> & {
+  blogcategories?: PopulatedBlogCategory[];
+};
+
 
 export type Author = {
   _id: string;
@@ -285,6 +295,7 @@ export type Category = {
   description?: string;
   range?: number;
   featured?: boolean;
+  productCount?: number;
   image?: {
     asset?: {
       _ref: string;

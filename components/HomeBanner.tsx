@@ -10,7 +10,7 @@ const HomeBanner = () => {
     return (
     <div className='bg-navy/80 py-16 md:py-0 rounded-lg px-10 md:px-24 flex items-center justify-between'>
         <div className='space-y-5'>
-            <Title>
+            <Title className='text-white'>
                 Upto 60% off on <br/>
                 Selected items
             </Title>
