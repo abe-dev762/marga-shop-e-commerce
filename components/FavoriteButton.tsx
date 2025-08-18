@@ -1,4 +1,3 @@
-
 "use client";
 import { Product } from "@/sanity.types";
 import useStore from "@/store";
