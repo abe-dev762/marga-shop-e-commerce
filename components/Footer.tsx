@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t">
+    <footer className="bg-white border-t mt-3">
       <Container>
         <FooterTop />
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
