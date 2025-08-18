@@ -24,6 +24,6 @@ const CategoryPage = async ({ params }: {
       </Container>
     </div>
   )
-}
+};
 
 export default CategoryPage;
