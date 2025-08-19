@@ -126,9 +126,10 @@ const getSingleBlog = async (slug: string) => {
     return data ?? [];
   } catch (error) {
     console.log("Error fetching all brands:", error);
-    return [];
+    return null;
   }
 };
+
 const getBlogCategories = async () => {
   try {
     const { data } = await sanityFetch({
