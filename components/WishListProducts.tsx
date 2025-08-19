@@ -14,6 +14,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 
+type CategoryRef = { _ref: string; _type: 'reference'; _key?: string };
+type CategoryDoc = { _id?: string; title?: string; name?: string; label?: string };
+type CategoryShape = string | CategoryRef | CategoryDoc | null | undefined;
+
+function getCategoryLabel(cat: CategoryShape): string {
+  if (!cat) return '';
+  if (typeof cat === 'string') return cat;
+  // Narrow  checking 
+  if ('title' in cat && typeof cat.title === 'string') return cat.title;
+  if ('name' in cat && typeof cat.name === 'string') return cat.name;
+  if ('label' in cat && typeof cat.label === 'string') return cat.label;
+  // Fallback 
+  if ('_ref' in cat && typeof cat._ref === 'string') return cat._ref;
+  // Last resort - stringify
+  try { return JSON.stringify(cat); } catch { return String(cat); }
+}
+
+
+
 const WishListProducts = () => {
     const [visibleProducts, setVisibleProducts] = useState(7);
     const { favoriteProduct, removeFromFavorite, resetFavorite } = useStore();
@@ -83,7 +102,7 @@ const WishListProducts = () => {
                       <td className="p-2 capitalize hidden md:table-cell">
                         {product?.categories && (
                           <p className="uppercase line-clamp-1 text-xs font-medium">
-                            {product.categories.map((cat) => cat).join(", ")}
+                            {product.categories?.map(getCategoryLabel).filter(Boolean).join(', ') || '—'}   
                           </p>
                         )}
                       </td>

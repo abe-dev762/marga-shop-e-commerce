@@ -70,7 +70,7 @@ export async function createCheckoutSession(
     } else {
       sessionPayload.customer_email = metadata.customerEmail;
     }
-
+    
     const session = await stripe.checkout.sessions.create(sessionPayload);
     return session.url;
   } catch (error) {
