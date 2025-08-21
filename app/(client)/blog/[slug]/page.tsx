@@ -15,14 +15,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 
+
 type BlogPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
   searchParams?: Record<string, string | string[] | undefined>;
 };
 
 
 const SingleBlogPage = async ({ params }: BlogPageProps) => {
-  const { slug } = params;
+  const { slug } = await params;
   const blogResult = await getSingleBlog(slug);
 
   let blog: SINGLE_BLOG_QUERYResult | null = null;
