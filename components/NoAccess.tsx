@@ -32,7 +32,7 @@ const NoAccess = ({
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-muted-foreground text-center">
-            Don't have an account?
+             Don&rsquo;t have an account?
           </div>
           <SignUpButton mode="modal">
             <Button variant="outline" className="w-full" size="lg">

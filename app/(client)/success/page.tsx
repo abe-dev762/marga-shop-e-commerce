@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import useStore from '@/store';
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Check, ShoppingBag, Home, Package } from 'lucide-react';
 import Link from 'next/link';

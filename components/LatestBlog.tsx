@@ -6,7 +6,7 @@ import { urlFor } from '@/sanity/lib/image';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import dayjs from 'dayjs';
-import { Blog, PopulatedBlog } from '@/sanity.types';
+import { PopulatedBlog } from '@/sanity.types';
 
 
 const LatestBlog = async () => {

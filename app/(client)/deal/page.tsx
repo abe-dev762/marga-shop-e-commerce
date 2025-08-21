@@ -5,7 +5,11 @@ import Title from '@/components/Title';
 import Container from '@/components/Container';
 import ProductCard from '@/components/ProductCard';
 
-const normalizeProduct = (raw: any): Product => {
+type RawProduct = Omit<Product, "categories"> & {
+  categories?: (string | null)[] | null;
+};
+
+const normalizeProduct = (raw: RawProduct): Product => {
     const categories = Array.isArray(raw.categories) && raw.categories.length ?
     raw.categories
     .filter((c: string | null): c is string => typeof c === "string")
