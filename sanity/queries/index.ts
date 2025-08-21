@@ -1,4 +1,4 @@
-import { PopulatedBlog } from "@/sanity.types";
+import { LATEST_BLOG_QUERYResult, PopulatedBlog } from "@/sanity.types";
 import { sanityFetch } from "../lib/live";
 import {
   BLOG_CATEGORIES,
@@ -48,12 +48,41 @@ const getAllBrands = async () => {
 const getLatestBlogs = async (): Promise<PopulatedBlog[]> => {
   try {
     const { data } = await sanityFetch({ query: LATEST_BLOG_QUERY });
-    return data ?? [];
+    const rawArray = Array.isArray(data) ? data : data ? [data] : [];
+
+    const raw = (rawArray as unknown) as LATEST_BLOG_QUERYResult[];
+
+    const hasRequiredFields = (b: LATEST_BLOG_QUERYResult): b is LATEST_BLOG_QUERYResult & { _id: string; title: string } =>
+      typeof (b as any)?._id === "string" && typeof (b as any)?.title === "string";
+
+    const normalized: PopulatedBlog[] = raw
+      .filter(hasRequiredFields)
+      .map((b) => {
+        const blogcategories = Array.isArray((b as any).blogcategories)
+          ? (b as any).blogcategories.map((c: any) => ({
+              _id: c?._id ?? "",
+              _type: c?._type ?? "category",
+              title: c?.title ?? "Uncategorize",
+              slug: c?.slug ?? undefined,
+            }))
+          : [];
+        const out: PopulatedBlog = {
+          ...b,
+          _id: (b as any)._id,
+          title: (b as any).title,
+          blogcategories,
+        } as unknown as PopulatedBlog;
+
+        return out;
+      });
+
+    return normalized;
   } catch (error) {
-    console.log("Error fetching latest Blogs:", error);
+    console.error("Error fetching latest Blogs:", error);
     return [];
   }
 };
+
 
 const getDealProducts = async () => {
   try {
