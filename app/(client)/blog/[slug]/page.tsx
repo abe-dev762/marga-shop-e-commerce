@@ -18,12 +18,14 @@ import React from "react";
 
 type BlogPageProps = {
   params: Promise<{ slug: string }>;
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined> | undefined>;
 };
 
 
-const SingleBlogPage = async ({ params }: BlogPageProps) => {
+const SingleBlogPage = async ({ params, searchParams }: BlogPageProps) => {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams: undefined;
+  console.log(resolvedSearchParams);
   const blogResult = await getSingleBlog(slug);
 
   let blog: SINGLE_BLOG_QUERYResult | null = null;
