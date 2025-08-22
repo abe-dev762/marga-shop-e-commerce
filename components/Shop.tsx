@@ -13,90 +13,62 @@ import { client } from '@/sanity/lib/client';
 import ProductCard from './ProductCard';
 import NoProductAvailable from './NoProductAvailable';
 
-interface ShopProps {
-    categories: Category[];
-    brands: BRANDS_QUERYResult;
+
+interface Props {
+  categories: Category[];
+  brands: BRANDS_QUERYResult;
 }
-
-
-const Shop = ({ categories, brands }: ShopProps) => {
-    const searchParams = useSearchParams();
-    const brandParams = searchParams?.get("brand");
-    const categoryParams = searchParams?.get("category");
-    const [loading, setLoading] = useState(false);
-    const [products, setProducts] = useState<Product[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(
-        categoryParams || null
-    );
-    const [selectedBrand, setSelectedBrand] = useState<string | null>(
-        brandParams || null
-    );
-    const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
-    // Replace your existing fetchProducts function with this
-const fetchProducts = useCallback(async () => {
-  setLoading(true);
-  try {
-    // price range defaults
-    let minPrice = 0;
-    let maxPrice = 10000;
-    if (selectedPrice) {
-      const [min, max] = selectedPrice.split('-').map(Number);
-      if (!Number.isNaN(min)) minPrice = min;
-      if (!Number.isNaN(max)) maxPrice = max;
-    }
-
-    
-    const query = `*[
-      _type == "product" &&
-      (!defined($selectedCategory) || $selectedCategory in categories[]->slug.current) &&
-      (!defined($selectedBrand) || brand->slug.current == $selectedBrand) &&
-      price >= coalesce($minPrice, 0) &&
-      price <= coalesce($maxPrice, 10000)
-    ] | order(name asc){
-      ...,
-      "categories": categories[]->{_id, title, "slug": slug.current},
-      "brand": brand->{_id, title, "slug": slug.current}
-    }`;
-
-    
-    const params: Record<string, any> = {
-      minPrice,
-      maxPrice,
-    };
-    if (selectedCategory) params.selectedCategory = selectedCategory; 
-    if (selectedBrand) params.selectedBrand = selectedBrand;         
-
-     const data = await client.fetch<Product[]>(
-      query,
-      {
-        selectedCategory: selectedCategory ?? undefined,
-        selectedBrand: selectedBrand ?? undefined,
-        minPrice,
-        maxPrice,
-      },
-      { next: { revalidate: 0 } }
-    );
-
-    
-    setProducts(data ?? []);
-  } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error fetching product:", error.message);
-      } else {
-        console.error("Error fetching product:", error)
+const Shop = ({ categories, brands }: Props) => {
+  const searchParams = useSearchParams();
+  const brandParams = searchParams?.get("brand");
+  const categoryParams = searchParams?.get("category");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    categoryParams || null
+  );
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(
+    brandParams || null
+  );
+  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      let minPrice = 0;
+      let maxPrice = 10000;
+      if (selectedPrice) {
+        const [min, max] = selectedPrice.split("-").map(Number);
+        minPrice = min;
+        maxPrice = max;
       }
-  } finally {
-    setLoading(false);
-  }
-}, [selectedCategory, selectedBrand, selectedPrice]);
-
+      const query = `
+      *[_type == 'product' 
+        && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
+        && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
+        && price >= $minPrice && price <= $maxPrice
+      ] 
+      | order(name asc) {
+        ...,"categories": categories[]->title
+      }
+    `;
+      const data = await client.fetch(
+        query,
+        { selectedCategory, selectedBrand, minPrice, maxPrice },
+        { next: { revalidate: 0 } }
+      );
+      setProducts(data);
+    } catch (error) {
+      console.log("Shop product fetching Error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
-
-
-
+  }, [selectedCategory, selectedBrand, selectedPrice]);
+    
+  
   return (
     <div className="border-t">
       <Container className="mt-5">
