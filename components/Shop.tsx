@@ -45,7 +45,7 @@ const fetchProducts = useCallback(async () => {
       if (!Number.isNaN(max)) maxPrice = max;
     }
 
-    // GROQ: guard optional params with !defined($param) || ...
+    
     const query = `*[
       _type == "product" &&
       (!defined($selectedCategory) || $selectedCategory in categories[]->slug.current) &&
@@ -58,20 +58,33 @@ const fetchProducts = useCallback(async () => {
       "brand": brand->{_id, title, "slug": slug.current}
     }`;
 
-    // Build params object but DO NOT include null keys
+    
     const params: Record<string, any> = {
       minPrice,
       maxPrice,
     };
-    if (selectedCategory) params.selectedCategory = selectedCategory; // slug string
-    if (selectedBrand) params.selectedBrand = selectedBrand;         // slug string
+    if (selectedCategory) params.selectedCategory = selectedCategory; 
+    if (selectedBrand) params.selectedBrand = selectedBrand;         
 
-    const data = await client.fetch(query, params, { next: { revalidate: 0 } });
+     const data = await client.fetch<Product[]>(
+      query,
+      {
+        selectedCategory: selectedCategory ?? undefined,
+        selectedBrand: selectedBrand ?? undefined,
+        minPrice,
+        maxPrice,
+      },
+      { next: { revalidate: 0 } }
+    );
 
-    // Sanity returns an array; setProducts expects Product[]
-    setProducts(data || []);
-  } catch (error) {
-    console.log("Product fetching error", error);
+    
+    setProducts(data ?? []);
+  } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error fetching product:", error.message);
+      } else {
+        console.error("Error fetching product:", error)
+      }
   } finally {
     setLoading(false);
   }
